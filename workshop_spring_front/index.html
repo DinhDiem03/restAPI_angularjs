@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="myApp">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link href="css/bootstrap.min.css" rel="stylesheet" />
+
+    <link
+      rel="stylesheet"
+      type="text/css"
+      href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.min.css"
+    />
+
+    <script
+      type="text/javascript"
+      language="javascript"
+      src="https://code.jquery.com/jquery-3.6.1.js"
+    ></script>
+    <script
+      type="text/javascript"
+      language="javascript"
+      src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"
+    ></script>
+    <script></script>
+    <title>Document</title>
+  </head>
+  <body ng-controller="myController">
+    <div class="container">
+      <div class="form-add">
+        <h1>Add products</h1>
+
+        <p>Tên sản phẩm</p>
+        <input type="text" name="tenSp" ng-model="request.tenSp" />
+
+        <p>Màu</p>
+        <input type="text" name="mau" ng-model="request.mau" />
+        <p>Số lượng</p>
+        <input type="number" name="soLuong" ng-model="request.soLuong" />
+        <p>Giá nhập</p>
+        <input type="number" name="giaNhap" ng-model="request.giaNhap" />
+        <p>Giá bán</p>
+        <input type="number" name="giaBan" ng-model="request.giaBan" />
+        <p>Mô tả</p>
+        <input type="text" name="moTa" ng-model="request.moTa" />
+        <p>Hãng</p>
+        <select
+          class="form-select"
+          aria-label="Default select example"
+          ng-model="request.idHang"
+        >
+          <option ng-repeat="hang in listHang" value="{{hang.id}}" selected>
+            {{hang.tenHang}}
+          </option>
+        </select>
+
+        <p>Trạng thái</p>
+        <select
+          class="form-select"
+          aria-label="Default select example"
+          ng-model="request.idTrangThai"
+        >
+          <option ng-repeat="tt in listTrangThai" value="{{tt.id}}" selected>
+            {{tt.tenTrangThai}}
+          </option>
+        </select>
+
+        <p>Loai sản phẩm</p>
+        <select
+          class="form-select"
+          aria-label="Default select example"
+          ng-model="request.idSubLoaiSp"
+        >
+          <option ng-repeat="loai in listSubLoai" value="{{loai.id}}" selected>
+            {{loai.tenSubLoai}}
+          </option>
+        </select>
+
+        <br />
+        <br />
+        <a href="#" ng-click="addSanPham()"> <button>Add</button></a> <br />
+        <br />
+        <br />
+      </div>
+      <!--  -->
+      <!-- Button trigger modal -->
+
+      <table id="myTable" class="lists list dtable">
+        <thead>
+          <tr>
+            <th>ten</th>
+            <th>mau</th>
+            <th>so luong</th>
+            <th>gia nhap</th>
+            <th>gia ban</th>
+            <th>mo ta</th>
+            <th>loai san pham</th>
+            <th>trang thai</th>
+            <th>chuc nang</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr data-ng-repeat="sp in lists">
+            <td>{{sp.tenSp}}</td>
+            <td>{{sp.mau}}</td>
+            <td>{{sp.soLuong}}</td>
+            <td>{{sp.giaNhap}}</td>
+            <td>{{sp.giaBan}}</td>
+            <td>{{sp.moTa}}</td>
+            <td>{{sp.subLoaiSanPham.tenSubLoai}}</td>
+            <td>{{sp.trangThai.tenTrangThai}}</td>
+
+            <td>
+              <a href="#" ng-click="getOne($event,sp.id,$index)">
+                <button
+                  type="button"
+                  class="btn btn-primary"
+                  data-bs-toggle="modal"
+                  data-bs-target="#staticBackdrop"
+                >
+                  Update
+                </button></a
+              >
+              <a href="#" ng-click="delete($event,sp.id)">
+                <button type="button" class="btn btn-primary">Xóa</button></a
+              >
+            </td>
+          </tr>
+        </tbody>
+      </table>
+
+      <!-- view up date -->
+      <div
+        class="modal fade"
+        id="staticBackdrop"
+        data-bs-backdrop="static"
+        data-bs-keyboard="false"
+        tabindex="-1"
+        aria-labelledby="staticBackdropLabel"
+        aria-hidden="true"
+      >
+        <div class="modal-dialog">
+          <div class="modal-content" style="padding: 50px">
+            <p>Tên sản phẩm</p>
+            <input type="text" name="tenSp" ng-model="request.tenSp" />
+
+            <p>Màu</p>
+            <input type="text" name="mau" ng-model="request.mau" />
+            <p>Số lượng</p>
+            <input type="number" name="soLuong" ng-model="request.soLuong" />
+            <p>Giá nhập</p>
+            <input type="number" name="giaNhap" ng-model="request.giaNhap" />
+            <p>Giá bán</p>
+            <input type="number" name="giaBan" ng-model="request.giaBan" />
+            <p>Mô tả</p>
+            <input type="text" name="moTa" ng-model="request.moTa" />
+            <p>Hãng</p>
+            <select
+              class="form-select"
+              aria-label="Default select example"
+              ng-model="request.idHang"
+            >
+              <option
+                ng-repeat="hang in listHang"
+                ng-selected="request.idHang == {{hang.id}}"
+                value="{{hang.id}}"
+              >
+                {{hang.tenHang}}
+              </option>
+            </select>
+
+            <p>Trạng thái</p>
+            <select
+              class="form-select"
+              aria-label="Default select example"
+              ng-model="request.idTrangThai"
+            >
+              <option
+                selected
+                ng-repeat="tt in listTrangThai"
+                ng-selected="request.idTrangThai == {{tt.id}}"
+                value="{{tt.id}}"
+              >
+                {{tt.tenTrangThai}}
+              </option>
+            </select>
+
+            <p>Loai sản phẩm</p>
+            <select
+              class="form-select"
+              aria-label="Default select example"
+              ng-model="request.idSubLoaiSp"
+            >
+              <option
+                selected
+                ng-repeat="loai in listSubLoai"
+                ng-selected="request.idSubLoaiSp == {{loai.id}}"
+                value="{{loai.id}}"
+              >
+                {{loai.tenSubLoai}}
+              </option>
+            </select>
+
+            <br />
+            <br />
+            <div class="modal-footer">
+              <button
+                type="button"
+                class="btn btn-secondary"
+                data-bs-dismiss="modal"
+              >
+                Close
+              </button>
+
+              <a href="#" ng-click="updateSanPham()">
+                <button
+                  type="button"
+                  class="btn btn-primary"
+                  data-bs-dismiss="modal"
+                >
+                  Update
+                </button></a
+              >
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- view udpate -->
+    </div>
+    <script src="lib/angular.js"></script>
+    <script src="index.js"></script>
+
+    <script src="js/bootstrap.bundle.min.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+  </body>
+</html>
